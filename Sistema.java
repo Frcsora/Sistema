@@ -2,7 +2,6 @@ package sistema;
 
 import java.util.Scanner;
 import java.util.InputMismatchException;
-import sistema.Usuario;
 import java.util.ArrayList;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter;
 import java.io.FileNotFoundException;
-import java.nio.file.StandardOpenOption;
 
 public class Sistema {
     
@@ -23,15 +21,19 @@ public class Sistema {
     static String nombre;
     static FileWriter guardar;
     public static void main(String[] args) {
+        
         try {
             File guardar = new File("guardar.txt");
-            Scanner lector = new Scanner(guardar);
-            while(lector.hasNextLine()){
-                users.add(new Usuario(lector.nextLine()));
+            if(guardar.exists() && guardar.isFile()){
+                Scanner lector = new Scanner(guardar);
+                while(lector.hasNextLine()){
+                    users.add(new Usuario(lector.nextLine()));
+                }
             }
         } catch (FileNotFoundException e){
             System.out.println("Error");
         }
+        System.out.println(users.get(0).getNombre());
         do{
             do{
                 try{
@@ -137,19 +139,21 @@ public class Sistema {
                     break;
                     
                 case 3:
-                    
+                    System.out.println("");
+                    System.out.println("Usuarios:");
                     for (int i = 0 ; i < users.size() ; i++){
                         if (users.get(i).getNombre() != null){
                             System.out.println(users.get(i).getNombre());
                         }
-                    }
-                    
+                    }              
+                    System.out.println("");
                     break;
                 case 0:
                     try{
                         guardar = new FileWriter("guardar.txt");
                         for(int i = 0; i < users.size() ; i++) {
                             guardar.write(users.get(i).getNombre());
+                            guardar.write("\n");
                         }
                         System.out.println("Se guardo correctamente");
                         guardar.close();
@@ -168,11 +172,10 @@ public class Sistema {
         System.out.println("1. Agregar usuario");
         System.out.println("2. Eliminar usuario");
         System.out.println("3. Ver usuarios del sistema");
-        System.out.println("0. Apagar el sistema");
+        System.out.println("0. Apagar el sistema y guardar");
         
         int eleccion = sc.nextInt();
         sc.nextLine();
         return eleccion;
     }
-    
 }
